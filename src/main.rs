@@ -1,11 +1,39 @@
+//! # Expression Parser
+//!
+//! A command-line mathematical expression parser and evaluator.
+//!
+//! This program provides a REPL (Read-Eval-Print Loop) interface for evaluating
+//! mathematical expressions. It uses a modular architecture with separate
+//! lexer, parser, and evaluator components.
+//!
+//! ## Features
+//!
+//! - Lexical analysis of arithmetic expressions
+//! - Pratt parser for operator precedence
+//! - Interactive REPL with command history
+//! - Error handling and reporting
+//!
+//! ## Usage
+//!
+//! Run the program and enter expressions at the `>> ` prompt.
+//! Type `exit` to quit, `help` for assistance.
+
 use rustyline::error::ReadlineError;
 use rustyline::{DefaultEditor, Result};
 
+mod error;
+mod expr;
 mod lexer;
+mod parser;
 mod token;
 
 use lexer::Lexer;
 
+/// The main entry point of the expression parser.
+///
+/// Initializes the REPL interface using rustyline for enhanced line editing
+/// and history. Currently demonstrates basic tokenization; full expression
+/// evaluation is under development.
 fn main() -> Result<()> {
     // The DefaultEditor is a struct provided by the rustyline crate that implements a readline-like interface.
     // if this returns an Err, immediately return that error from the current function.

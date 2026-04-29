@@ -1,11 +1,36 @@
+//! # Lexer Module
+//!
+//! This module implements the lexical analyzer (lexer) for the expression parser.
+//! The lexer converts a string input into a sequence of tokens that can be
+//! processed by the parser. It handles basic arithmetic operators and single-digit
+//! integers, skipping whitespace and reporting errors for invalid characters.
+
 use crate::token::Token;
 
+/// The lexical analyzer that tokenizes input strings into tokens.
+///
+/// The lexer processes the input character by character, recognizing patterns
+/// for numbers, operators, and other tokens. It maintains an internal position
+/// in the input and produces a vector of tokens.
 pub(crate) struct Lexer {
-    input: Vec<char>, // the characters to lex
-    pos: usize,       // current position
+    /// The input characters to be tokenized.
+    input: Vec<char>,
+    /// The current position in the input.
+    pos: usize,
 }
 
 impl Lexer {
+    /// Creates a new lexer with the given input string.
+    ///
+    /// # Arguments
+    ///
+    /// * `input` - The string to be tokenized.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let lexer = Lexer::new("3 + 4");
+    /// ```
     pub fn new(input: &str) -> Self {
         Lexer {
             input: input.chars().collect(),
@@ -13,18 +38,38 @@ impl Lexer {
         }
     }
 
-    // Peek at the current character without advancing the position. If we are at the end of the input, return None.
+    /// Peeks at the current character without advancing the position.
+    ///
+    /// Returns `None` if at the end of input.
     fn peek(&self) -> Option<char> {
         self.input.get(self.pos).copied()
     }
 
-    // Advance the position and return the current character. If we are at the end of the input, return None.
+    /// Advances the position and returns the current character.
+    ///
+    /// Returns `None` if at the end of input.
     fn advance(&mut self) -> Option<char> {
         let current_char = self.peek();
         self.pos += 1;
         current_char
     }
 
+    /// Tokenizes the entire input string into a vector of tokens.
+    ///
+    /// Processes the input from start to finish, recognizing operators,
+    /// numbers, and skipping whitespace. Ends with an EOF token.
+    ///
+    /// # Returns
+    ///
+    /// A vector of `Token`s representing the lexical structure of the input.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut lexer = Lexer::new("3 + 4");
+    /// let tokens = lexer.tokenize();
+    /// // tokens: [Int(3), Add, Int(4), EOF]
+    /// ```
     pub fn tokenize(&mut self) -> Vec<Token> {
         let mut tokens = Vec::new();
 
