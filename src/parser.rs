@@ -4,7 +4,9 @@
 //! (top-down operator precedence parsing). The parser converts a sequence of tokens
 //! into an abstract syntax tree (AST) represented by `Expr` nodes.
 //!
-//! Currently implements basic token navigation; full parsing logic is under development.
+//! The Pratt parser uses a technique of binding powers to handle operator precedence
+//! and associativity correctly. Operators with higher binding power bind more tightly
+//! to their operands.
 
 use crate::error::ParseError;
 use crate::expr::Expr;
@@ -55,6 +57,15 @@ impl Parser {
         current_token
     }
 
+    /// Parses the entire token sequence into an expression AST.
+    ///
+    /// Ensures that all tokens are consumed (ends with EOF) and returns the
+    /// resulting expression.
+    ///
+    /// # Returns
+    ///
+    /// Returns `Ok(Expr)` with the parsed expression, or `Err(ParseError)` if
+    /// parsing fails.
     pub fn parse(&mut self) -> Result<Expr, ParseError> {
         let expr = self.parse_expr(0)?;
 
@@ -65,11 +76,22 @@ impl Parser {
         }
     }
 
+    /// Parses an expression using the Pratt parsing algorithm with the given minimum binding power.
+    ///
+    /// This is the core of the Pratt parser, implementing the precedence climbing algorithm.
+    ///
+    /// # Arguments
+    ///
+    /// * `min_power` - The minimum binding power for operators to be considered at this level.
+    ///
+    /// # Returns
+    ///
+    /// Returns `Ok(Expr)` with the parsed expression, or `Err(ParseError)` if parsing fails.
     fn parse_expr(&mut self, min_power: u8) -> Result<Expr, ParseError> {
         // 1. parse the left side — must be a number
         let mut left = match self.advance() {
             Some(Token::Int(n)) => Expr::Number(n),
-            Some(Token::EOF) => return Err(ParseError::UnexpectedEOF), // ← add this
+            Some(Token::EOF) => return Err(ParseError::UnexpectedEOF),
             Some(other) => return Err(ParseError::UnexpectedToken(other)),
             None => return Err(ParseError::UnexpectedEOF),
         };
@@ -105,6 +127,23 @@ impl Parser {
     }
 }
 
+/// Determines the binding power (precedence) of a token.
+///
+/// Binding power is used by the Pratt parser to determine operator precedence.
+/// Higher binding power means the operator binds more tightly.
+///
+/// # Binding Powers
+///
+/// - `+` and `-`: 1 (lowest precedence)
+/// - `*` and `/`: 2 (highest precedence)
+///
+/// # Arguments
+///
+/// * `token` - The token to get the binding power for.
+///
+/// # Returns
+///
+/// Returns `Some(u8)` if the token is an operator, `None` otherwise.
 fn binding_power(token: &Token) -> Option<u8> {
     match token {
         Token::Add | Token::Sub => Some(1),

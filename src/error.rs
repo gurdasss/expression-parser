@@ -1,7 +1,8 @@
 //! # Error Module
 //!
 //! This module defines error types used throughout the expression parser.
-//! Currently, it focuses on parse errors that can occur during parsing.
+//! It includes both parsing errors that occur during tokenization and parsing,
+//! as well as evaluation errors that occur during AST evaluation.
 
 use crate::token::Token;
 use std::fmt;
@@ -18,8 +19,13 @@ pub enum ParseError {
     UnexpectedEOF,
 }
 
+/// Represents errors that can occur during evaluation of expressions.
+///
+/// Evaluation errors indicate issues encountered while computing the result
+/// of a valid AST, such as division by zero.
 #[derive(Debug, PartialEq)]
 pub enum EvalError {
+    /// Attempted to divide by zero.
     DivisionByZero,
 }
 

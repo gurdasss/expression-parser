@@ -1,10 +1,38 @@
+//! # Evaluator Module
+//!
+//! This module implements the evaluation engine for the expression parser.
+//! The evaluator takes an abstract syntax tree (AST) produced by the parser
+//! and recursively evaluates it to produce a numeric result.
+//!
+//! The evaluator handles all arithmetic operations with proper error handling,
+//! including division by zero detection.
+
 use crate::error::EvalError;
 use crate::expr::Expr;
 use crate::token::Token;
 
 /// Evaluates an expression and returns the result or an evaluation error.
+///
 /// This function recursively evaluates the abstract syntax tree (AST) produced
-/// by the parser. It handles basic arithmetic operations and checks for errors like division by zero.
+/// by the parser. It handles basic arithmetic operations and checks for errors
+/// like division by zero.
+///
+/// # Arguments
+///
+/// * `expr` - A reference to the expression to evaluate.
+///
+/// # Returns
+///
+/// Returns `Ok(i64)` with the computed result, or `Err(EvalError)` if division
+/// by zero is encountered.
+///
+/// # Example
+///
+/// ```
+/// use crate::expr::Expr;
+/// use crate::token::Token;
+/// // eval(&Expr::BinaryOp { left: Box::new(...), op: Token::Add, right: Box::new(...) })
+/// ```
 
 pub fn eval(expr: &Expr) -> Result<i64, EvalError> {
     match expr {
