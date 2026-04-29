@@ -16,3 +16,8 @@ pub enum ParseError {
     /// The input ended unexpectedly (premature EOF).
     UnexpectedEOF,
 }
+
+#[derive(Debug)]
+pub enum EvalError {
+    DivisionByZero,
+}

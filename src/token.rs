@@ -10,7 +10,8 @@
 /// Tokens are the basic building blocks of the input expression, produced by
 /// the lexer and consumed by the parser. This enum includes variants for
 /// numeric literals, arithmetic operators, and control tokens.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq)]
+
 pub enum Token {
     /// An integer literal (currently single-digit, 0-9).
     Int(i64),

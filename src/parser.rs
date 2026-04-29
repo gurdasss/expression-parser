@@ -56,7 +56,13 @@ impl Parser {
     }
 
     pub fn parse(&mut self) -> Result<Expr, ParseError> {
-        self.parse_expr(0)
+        let expr = self.parse_expr(0)?;
+
+        // ensure nothing is left unconsumed
+        match self.peek() {
+            Some(Token::EOF) | None => Ok(expr),
+            Some(other) => Err(ParseError::UnexpectedToken(other)),
+        }
     }
 
     fn parse_expr(&mut self, min_power: u8) -> Result<Expr, ParseError> {
@@ -336,10 +342,12 @@ mod tests {
 
     #[test]
     fn test_unknown_character() {
-        // "3@4" — lexer produces Token::Err('@')
-        // parser sees it where an operator is expected, stops,
-        // but "3" alone is a valid expression so it returns Ok
-        assert!(matches!(parse("3@4"), Ok(Expr::Number(3))));
+        // "3@4" — after parsing 3, parser sees Token::Err('@')
+        // which is not EOF, so it's now an error
+        assert!(matches!(
+            parse("3@4"),
+            Err(ParseError::UnexpectedToken(Token::Err('@')))
+        ));
     }
 
     #[test]
