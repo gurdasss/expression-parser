@@ -64,9 +64,9 @@ fn main() -> Result<()> {
                         match Parser::new(tokens).parse() {
                             Ok(expr) => match eval(&expr) {
                                 Ok(result) => println!("{}", result),
-                                Err(e) => eprintln!("error: {:?}", e),
+                                Err(e) => eprintln!("error: {}", e),
                             },
-                            Err(e) => eprintln!("error: {:?}", e),
+                            Err(e) => eprintln!("error: {}", e),
                         }
                     }
                 }

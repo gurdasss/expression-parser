@@ -4,6 +4,7 @@
 //! Currently, it focuses on parse errors that can occur during parsing.
 
 use crate::token::Token;
+use std::fmt;
 
 /// Represents errors that can occur during parsing of expressions.
 ///
@@ -20,4 +21,27 @@ pub enum ParseError {
 #[derive(Debug, PartialEq)]
 pub enum EvalError {
     DivisionByZero,
+}
+
+impl fmt::Display for ParseError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ParseError::UnexpectedToken(token) => {
+                write!(f, "unexpected token: {}", token)
+            }
+            ParseError::UnexpectedEOF => {
+                write!(f, "unexpected end of input")
+            }
+        }
+    }
+}
+
+impl fmt::Display for EvalError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            EvalError::DivisionByZero => {
+                write!(f, "division by zero")
+            }
+        }
+    }
 }

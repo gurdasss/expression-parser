@@ -5,6 +5,8 @@
 //! appear in a mathematical expression, including integers, operators, and
 //! special tokens like EOF (end of file) and error tokens.
 
+use std::fmt;
+
 /// Represents a lexical token in the expression parser.
 ///
 /// Tokens are the basic building blocks of the input expression, produced by
@@ -27,4 +29,18 @@ pub enum Token {
     EOF,
     /// An error token for unrecognized characters.
     Err(char),
+}
+
+impl fmt::Display for Token {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Token::Int(n) => write!(f, "number {}", n),
+            Token::Add => write!(f, "'+'"),
+            Token::Sub => write!(f, "'-'"),
+            Token::Mul => write!(f, "'*'"),
+            Token::Div => write!(f, "'/'"),
+            Token::EOF => write!(f, "end of input"),
+            Token::Err(c) => write!(f, "invalid character '{}'", c),
+        }
+    }
 }
