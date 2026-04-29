@@ -1,11 +1,17 @@
 use rustyline::error::ReadlineError;
 use rustyline::{DefaultEditor, Result};
 
+mod lexer;
+use lexer::Lexer;
+
 fn main() -> Result<()> {
     // The DefaultEditor is a struct provided by the rustyline crate that implements a readline-like interface.
     // if this returns an Err, immediately return that error from the current function.
     // If it's Ok, unwrap it and give me the value.
     let mut rl = DefaultEditor::new()?;
+
+    let mut lexer = Lexer::new("3 + 4 * 2");
+    println!("{:?}", lexer.tokenize());
 
     // Try to load the history from a file, if it fails, print a message but don't panic.
     #[cfg(feature = "with-file-history")]
