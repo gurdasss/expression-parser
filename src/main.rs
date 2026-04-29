@@ -2,6 +2,8 @@ use rustyline::error::ReadlineError;
 use rustyline::{DefaultEditor, Result};
 
 mod lexer;
+mod token;
+
 use lexer::Lexer;
 
 fn main() -> Result<()> {
