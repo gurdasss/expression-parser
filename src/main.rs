@@ -28,6 +28,7 @@ mod parser;
 mod token;
 
 use lexer::Lexer;
+use parser::Parser;
 
 /// The main entry point of the expression parser.
 ///
@@ -39,9 +40,6 @@ fn main() -> Result<()> {
     // if this returns an Err, immediately return that error from the current function.
     // If it's Ok, unwrap it and give me the value.
     let mut rl = DefaultEditor::new()?;
-
-    let mut lexer = Lexer::new("3 + 4 * 2");
-    println!("{:?}", lexer.tokenize());
 
     // Try to load the history from a file, if it fails, print a message but don't panic.
     #[cfg(feature = "with-file-history")]
@@ -60,7 +58,8 @@ fn main() -> Result<()> {
                     "exit" => break,
                     "help" => {}
                     _ => {
-                        println!("{}", line.trim());
+                        let mut lexer = Lexer::new(&line);
+                        println!("AST: {:?}", Parser::new(lexer.tokenize()).parse());
                     }
                 }
 

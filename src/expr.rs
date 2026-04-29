@@ -11,9 +11,10 @@ use crate::token::Token;
 /// Expressions can be either numeric literals or binary operations combining
 /// two sub-expressions with an operator. This recursive structure allows
 /// representing complex mathematical expressions.
+#[derive(Debug)]
 pub(crate) enum Expr {
     /// A numeric literal value.
-    Number(f64),
+    Number(i64),
     /// A binary operation with left operand, operator, and right operand.
     BinaryOp {
         /// The left-hand side expression.
