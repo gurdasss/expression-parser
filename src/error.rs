@@ -17,7 +17,7 @@ pub enum ParseError {
     UnexpectedEOF,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum EvalError {
     DivisionByZero,
 }

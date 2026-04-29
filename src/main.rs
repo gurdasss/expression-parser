@@ -22,11 +22,13 @@ use rustyline::error::ReadlineError;
 use rustyline::{DefaultEditor, Result};
 
 mod error;
+mod evaluator;
 mod expr;
 mod lexer;
 mod parser;
 mod token;
 
+use evaluator::eval;
 use lexer::Lexer;
 use parser::Parser;
 
@@ -58,8 +60,14 @@ fn main() -> Result<()> {
                     "exit" => break,
                     "help" => {}
                     _ => {
-                        let mut lexer = Lexer::new(&line);
-                        println!("AST: {:?}", Parser::new(lexer.tokenize()).parse());
+                        let tokens = Lexer::new(&line).tokenize();
+                        match Parser::new(tokens).parse() {
+                            Ok(expr) => match eval(&expr) {
+                                Ok(result) => println!("{}", result),
+                                Err(e) => eprintln!("error: {:?}", e),
+                            },
+                            Err(e) => eprintln!("error: {:?}", e),
+                        }
                     }
                 }
 
